@@ -25,35 +25,37 @@ public class EmployeeService {
         return EmployeeMapper.mapToEmployeeDTO(savedEmployee);
     }
 
+    public EmployeeDTO getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employee not found: " + id));
+        return EmployeeMapper.mapToEmployeeDTO(employee);
+    }
+
     public List<EmployeeDTO> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         return employees.stream().map(EmployeeMapper::mapToEmployeeDTO).collect(Collectors.toList());
     }
 
+    public EmployeeDTO updateEmployee(Long id, EmployeeDTO updatedEmployee) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employee not found: " + id));
+
+        employee.setEmail(updatedEmployee.getEmail());
+        employee.setName(updatedEmployee.getName());
+        employee.setPhone(updatedEmployee.getPhone());
+        employee.setDepartment(updatedEmployee.getDepartment());
+
+        Employee updatedEmployeeObj = employeeRepository.save(employee);
+        return EmployeeMapper.mapToEmployeeDTO(updatedEmployeeObj);
+
+    }
+
     public void deleteEmployee(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Employee not found: "+ id));
-
-    }
-
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
-    }
-
-    public Employee updateEmployee(Long id, Employee employee) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        if (optionalEmployee.isPresent()) {
-            Employee existingEmployee = optionalEmployee.get();
-
-            existingEmployee.setEmail(employee.getEmail());
-            existingEmployee.setName(employee.getName());
-            existingEmployee.setPhone(employee.getPhone());
-            existingEmployee.setDepartment(employee.getDepartment());
-
-            return employeeRepository.save(existingEmployee);
-        }
-
-        return null;
+                        new ResourceNotFoundException("Employee not found: " + id));
+        employeeRepository.deleteById(id);
     }
 }
