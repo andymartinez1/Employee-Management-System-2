@@ -1,5 +1,6 @@
 package com.andymartinez1.employee.controller;
 
+import com.andymartinez1.employee.dto.EmployeeDTO;
 import com.andymartinez1.employee.entity.Employee;
 import com.andymartinez1.employee.service.EmployeeService;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,21 +21,23 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/employee")
-    public Employee postEmployee(@RequestBody Employee employee) {
-        return employeeService.postEmployee(employee);
+    public ResponseEntity<EmployeeDTO> postEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO savedEmployee = employeeService.postEmployee(employeeDTO);
+        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
     @GetMapping("/employees")
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
 
     @DeleteMapping("/employee/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable Long id){
-        try{
+    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+        try {
             employeeService.deleteEmployee(id);
             return new ResponseEntity<>("Employee with ID: " + id + " deleted successfully", HttpStatus.OK);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
