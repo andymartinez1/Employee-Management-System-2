@@ -1,9 +1,8 @@
 package com.andymartinez1.employee.controller;
 
 import com.andymartinez1.employee.dto.EmployeeDTO;
-import com.andymartinez1.employee.entity.Employee;
 import com.andymartinez1.employee.service.EmployeeService;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/employee")
-    public ResponseEntity<EmployeeDTO> postEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<EmployeeDTO> postEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
         EmployeeDTO savedEmployee = employeeService.postEmployee(employeeDTO);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }

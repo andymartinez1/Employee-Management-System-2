@@ -5,13 +5,11 @@ import com.andymartinez1.employee.entity.Employee;
 import com.andymartinez1.employee.exception.ResourceNotFoundException;
 import com.andymartinez1.employee.mapper.EmployeeMapper;
 import com.andymartinez1.employee.repository.EmployeeRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
