@@ -45,49 +45,47 @@ export default function Dashboard() {
   };
 
   return (
-    <>
-      <Container className="mt-5">
-        <Row>
-          <Col>
-            <h1 className="text-center">Employees</h1>
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone#</th>
-                  <th>Department</th>
-                  <th>Action</th>
+    <Container className="mt-5">
+      <Row>
+        <Col>
+          <h1 className="text-center">Employees</h1>
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone#</th>
+                <th>Department</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {employees.map((employee) => (
+                <tr key={employee.id}>
+                  <td>{employee.name}</td>
+                  <td>{employee.email}</td>
+                  <td>{employee.phone}</td>
+                  <td>{employee.department}</td>
+                  <td>
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => handleUpdate(employee.id)}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => handleDelete(employee.id)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {employees.map((employee) => (
-                  <tr key={employee.id}>
-                    <td>{employee.name}</td>
-                    <td>{employee.email}</td>
-                    <td>{employee.phone}</td>
-                    <td>{employee.department}</td>
-                    <td>
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => handleUpdate(employee.id)}
-                      >
-                        Update
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        onClick={() => handleDelete(employee.id)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-      </Container>
-    </>
+              ))}
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
+    </Container>
   );
 }
