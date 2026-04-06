@@ -1,11 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
 import Dashboard from "./components/Dashboard/Dashboard";
 import PostEmployee from "./components/Employee/PostEmployee";
 import UpdateEmployee from "./components/Employee/UpdateEmployee";
 import Header from "./components/Header/Header";
-import NoMatch from "./components/noMatch/NoMatch";
+import NoMatch from "./components/NoMatch/NoMatch";
 
 function App() {
   return (
