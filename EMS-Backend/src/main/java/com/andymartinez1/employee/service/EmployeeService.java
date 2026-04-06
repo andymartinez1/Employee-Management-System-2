@@ -1,5 +1,7 @@
 package com.andymartinez1.employee.service;
 
+import com.andymartinez1.employee.dto.EmployeeRequest;
+import com.andymartinez1.employee.dto.EmployeeResponse;
 import com.andymartinez1.employee.entity.Employee;
 import com.andymartinez1.employee.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -7,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +16,35 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
-    public Employee postEmployee(Employee employee) {
-        return employeeRepository.save(employee);
+    public EmployeeResponse postEmployee(EmployeeRequest request) {
+        Employee employee = mapToEmployee(request);
+
+        return mapToEmployeeResponse(employeeRepository.save(employee));
     }
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public EmployeeResponse getEmployeeById(Long id) {
+        var employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee with ID: " + id + " not found."));
+        return mapToEmployeeResponse(employee);
+    }
+
+    public List<EmployeeResponse> getAllEmployees() {
+        List<Employee> employees = employeeRepository.findAll();
+        return employees.stream()
+                .map(this::mapToEmployeeResponse)
+                .toList();
+    }
+
+    public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee with ID: " + id + " not found."));
+
+        employee.setName(request.getName());
+        employee.setEmail(request.getEmail());
+        employee.setPhone(request.getPhone());
+        employee.setDepartment(request.getDepartment());
+
+        return mapToEmployeeResponse(employeeRepository.save(employee));
     }
 
     public void deleteEmployee(Long id) {
@@ -30,23 +54,22 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
+    private EmployeeResponse mapToEmployeeResponse(Employee employee) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setId(employee.getId());
+        response.setName(employee.getName());
+        response.setEmail(employee.getEmail());
+        response.setPhone(employee.getPhone());
+        response.setDepartment(employee.getDepartment());
+        return response;
     }
 
-    public Employee updateEmployee(Long id, Employee employee) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        if (optionalEmployee.isPresent()) {
-            Employee existingEmployee = optionalEmployee.get();
-
-            existingEmployee.setEmail(employee.getEmail());
-            existingEmployee.setName(employee.getName());
-            existingEmployee.setPhone(employee.getPhone());
-            existingEmployee.setDepartment(employee.getDepartment());
-
-            return employeeRepository.save(existingEmployee);
-        }
-
-        return null;
+    private Employee mapToEmployee(EmployeeRequest request) {
+        Employee employee = new Employee();
+        employee.setName(request.getName());
+        employee.setEmail(request.getEmail());
+        employee.setPhone(request.getPhone());
+        employee.setDepartment(request.getDepartment());
+        return employee;
     }
 }

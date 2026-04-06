@@ -9,7 +9,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
       <Navbar expand="sm" className="app-navbar">
         <Container>
           <Navbar.Brand as={Link} to="/" className="brand">
-            <span className="brand-icon">👥</span>
+            <span className="brand-icon"></span>
             <span>EMS</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="main-nav" />
@@ -21,13 +21,6 @@ import { Container, Nav, Navbar } from "react-bootstrap";
                 className={`nav-item-link ${pathname === "/" ? "active" : ""}`}
               >
                 Employees
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/employee"
-                className={`nav-item-link ${pathname === "/employee" ? "active" : ""}`}
-              >
-                + Add Employee
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

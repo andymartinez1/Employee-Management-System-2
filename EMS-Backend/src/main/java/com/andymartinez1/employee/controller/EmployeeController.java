@@ -1,8 +1,8 @@
 package com.andymartinez1.employee.controller;
 
-import com.andymartinez1.employee.entity.Employee;
+import com.andymartinez1.employee.dto.EmployeeRequest;
+import com.andymartinez1.employee.dto.EmployeeResponse;
 import com.andymartinez1.employee.service.EmployeeService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,38 +19,28 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/employee")
-    public Employee postEmployee(@RequestBody Employee employee) {
-        return employeeService.postEmployee(employee);
-    }
-
-    @GetMapping("/employees")
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
-    }
-
-    @DeleteMapping("/employee/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
-        try {
-            employeeService.deleteEmployee(id);
-            return new ResponseEntity<>("Employee with ID: " + id + " deleted successfully", HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<EmployeeResponse> postEmployee(@RequestBody EmployeeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.postEmployee(request));
     }
 
     @GetMapping("/employee/{id}")
-    public ResponseEntity<?> getEmployeeById(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+    }
 
-        if (employee == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(employee);
+    @GetMapping("/employees")
+    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
     @PutMapping("/employee/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
-        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+    public ResponseEntity<EmployeeResponse> updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequest request) {
+        return ResponseEntity.ok(employeeService.updateEmployee(id, request));
+    }
 
-        if (updatedEmployee == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        return ResponseEntity.ok(updatedEmployee);
+    @DeleteMapping("/employee/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 }
